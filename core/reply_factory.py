@@ -29,24 +29,36 @@ def generate_bot_responses(message, session):
 
 
 def record_current_answer(answer, current_question_id, session):
-    '''
-    Validates and stores the answer for the current question to django session.
-    '''
-    return True, ""
+    # Retrieve question data based on current_question_id
+    question_data = PYTHON_QUESTION_LIST[current_question_id]
+
+    # Retrieve correct answer from question data
+    correct_answer = question_data['correct_answer']
+
+    # Validate user's answer
+    if answer == correct_answer:
+        # Store answer in session
+        if 'answers' not in session:
+            session['answers'] = {}
+        session['answers'][current_question_id] = answer
+        return True, ""
+    else:
+        # Return error message if answer is incorrect
+        error_message = "Incorrect answer. Please try again."
+        return False, error_message
 
 
 def get_next_question(current_question_id):
-    '''
-    Fetches the next question from the PYTHON_QUESTION_LIST based on the current_question_id.
-    '''
+    # Ensure current_question_id is within bounds
+    if current_question_id < len(PYTHON_QUESTION_LIST) - 1:
+        # Increment current_question_id to fetch next question
+        next_question_id = current_question_id + 1
+        next_question = PYTHON_QUESTION_LIST[next_question_id]['question_text']
+        return next_question, next_question_id
+    else:
+        # Return None if all questions have been asked
+        return None, current_question_id
 
-    return "dummy question", -1
 
-
-def generate_final_response(session):
-    '''
-    Creates a final result message including a score based on the answers
-    by the user for questions in the PYTHON_QUESTION_LIST.
-    '''
 
     return "dummy result"
