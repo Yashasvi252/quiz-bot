@@ -29,10 +29,20 @@ def generate_bot_responses(message, session):
 
 
 def record_current_answer(answer, current_question_id, session):
+    question_data = PYTHON_QUESTION_LIST[current_question_id]
+    correct_answer = question_data['correct_answer']
+    if answer == correct_answer:
+        if 'answer' not in session:
+            session['answers'] = {}
+        session['answers'][currect_question_id] = answer
+        
     '''
     Validates and stores the answer for the current question to django session.
     '''
     return True, ""
+else:
+error_message = "Incorrect answer. Please try again."
+return False , error_message
 
 
 def get_next_question(current_question_id):
